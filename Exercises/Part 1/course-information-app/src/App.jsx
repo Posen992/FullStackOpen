@@ -45,8 +45,12 @@ const Content = (props) => {
   )
 }
 
-const Part = (props) => <p>{props.name} {props.number}</p>
-
+const Part = (props) => {
+  console.log(props)
+  return (
+    <p>{props.name} {props.number}</p>
+  )
+}
 
 const Total = (props) => {
   console.log(props)
