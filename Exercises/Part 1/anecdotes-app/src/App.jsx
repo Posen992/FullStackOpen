@@ -13,7 +13,7 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState([0,0,0,0,0,0,0,0])
+  const [votes, setVotes] = useState(Array(8).fill(0))
   const [mostVote, setMostVote] = useState(0)
 
   const getRandomInt = (max) => () => {
