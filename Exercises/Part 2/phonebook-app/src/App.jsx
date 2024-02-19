@@ -7,6 +7,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFliter] = useState('')
+  const [resultMessage, setResultMessage] = useState(null)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   useEffect(() => {
     personService.getAll().then(initialPersons =>
@@ -36,7 +38,15 @@ const App = () => {
       
       personService.create(newPerson)
       .then(returnedPerson => {
+        setIsSuccess(true)
         setPersons(persons.concat(returnedPerson))
+
+        setResultMessage(`Added ${returnedPerson.name}`)
+        
+        setTimeout(()=>{
+          setResultMessage(null)
+        },5000)
+        
       })
     }
   }
@@ -48,6 +58,15 @@ const App = () => {
       .then(deletedPerson =>
         setPersons(persons.filter(person => person.id !== deletedPerson.id))
       )
+      .catch(error => {
+        console.log(error)
+        setIsSuccess(false)
+        setResultMessage(`Infomation of ${person.name} has already been removed from server`)
+
+        setTimeout(()=>{
+          setResultMessage(null)
+        },5000)
+      })
     }
   }
 
@@ -75,6 +94,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={resultMessage} isSuccess={isSuccess} />
       <Fliter value={newFilter} onChange={handleFilterChange} />
       <h2>add a new</h2>
        <PersonForm onSubmit={addPerson} name={newName} nameOnChange={handleNameChange} number={newNumber} numberOnChange={handleNumberChange}/>
@@ -120,6 +140,18 @@ const Persons = ({persons,deletePerson}) => {
         </li>
     )}
   </ul>
+  )
+}
+
+const Notification = ({ isSuccess, message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={isSuccess?'success':'error'}>
+      {message}
+    </div>
   )
 }
 
