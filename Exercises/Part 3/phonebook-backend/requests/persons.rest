@@ -1,0 +1,15 @@
+### fetch all persons 
+GET  http://localhost:3003/api/persons
+
+### fetch info about the phonebook
+GET  http://localhost:3003/info
+
+### fetch person by existing id
+GET  http://localhost:3003/api/persons/4
+
+
+### fetch person by noexisting id
+GET  http://localhost:3003/api/persons/4
+
+### delete person by id
+DELETE  http://localhost:3003/api/persons/4
