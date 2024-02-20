@@ -52,11 +52,11 @@ const App = () => {
   }
 
   const deletePerson = (id) => {
-    const person = persons.find(item => item.id === id)
-    if (window.confirm(`Delete ${person.name} ?`)) {
-      personService.deletePerson(person.id)
-      .then(deletedPerson =>
-        setPersons(persons.filter(person => person.id !== deletedPerson.id))
+    const deletedPerson = persons.find(item => item.id === id)
+    if (window.confirm(`Delete ${deletedPerson.name} ?`)) {
+      personService.deletePerson(deletedPerson.id)
+      .then(() =>
+        setPersons(persons.filter(person => person.id !== deletedPerson.id))  
       )
       .catch(error => {
         console.log(error)
