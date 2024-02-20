@@ -14,20 +14,21 @@ const App = () => {
     personService.getAll().then(initialPersons =>
       setPersons(initialPersons)
     )
-  },[])
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
-    console.log(event)
-    
+
     const person = persons.find(item => item.name === newName)
     if (person) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        const newPerson = {...person, number:newNumber}
+        const newPerson = { ...person, number: newNumber }
         personService.update(person.id, newPerson)
-        .then(returnedPerson => {
-          setPersons(persons.map(person => person.id === returnedPerson.id? returnedPerson:person ))
-        })
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === returnedPerson.id ? returnedPerson : person))
+          }).catch(error => {
+            console.log(error.response.data.error)
+          })
       }
     }
     else {
@@ -35,19 +36,23 @@ const App = () => {
         name: newName,
         number: newNumber
       }
-      
-      personService.create(newPerson)
-      .then(returnedPerson => {
-        setIsSuccess(true)
-        setPersons(persons.concat(returnedPerson))
 
-        setResultMessage(`Added ${returnedPerson.name}`)
-        
-        setTimeout(()=>{
-          setResultMessage(null)
-        },5000)
-        
-      })
+      personService.create(newPerson)
+        .then(returnedPerson => {
+          setIsSuccess(true)
+          setPersons(persons.concat(returnedPerson))
+          setResultMessage(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setResultMessage(null)
+          }, 5000)
+        }).catch(error => {
+          setIsSuccess(false)
+          
+          setResultMessage(error.response.data.error)
+          setTimeout(() => {
+            setResultMessage(null)
+          }, 15000)
+        })
     }
   }
 
@@ -55,18 +60,18 @@ const App = () => {
     const deletedPerson = persons.find(item => item.id === id)
     if (window.confirm(`Delete ${deletedPerson.name} ?`)) {
       personService.deletePerson(deletedPerson.id)
-      .then(() =>
-        setPersons(persons.filter(person => person.id !== deletedPerson.id))  
-      )
-      .catch(error => {
-        console.log(error)
-        setIsSuccess(false)
-        setResultMessage(`Infomation of ${person.name} has already been removed from server`)
+        .then(() =>
+          setPersons(persons.filter(person => person.id !== deletedPerson.id))
+        )
+        .catch(error => {
+          console.log(error)
+          setIsSuccess(false)
+          setResultMessage(`Infomation of ${person.name} has already been removed from server`)
 
-        setTimeout(()=>{
-          setResultMessage(null)
-        },5000)
-      })
+          setTimeout(() => {
+            setResultMessage(null)
+          }, 5000)
+        })
     }
   }
 
@@ -97,9 +102,9 @@ const App = () => {
       <Notification message={resultMessage} isSuccess={isSuccess} />
       <Fliter value={newFilter} onChange={handleFilterChange} />
       <h2>add a new</h2>
-       <PersonForm onSubmit={addPerson} name={newName} nameOnChange={handleNameChange} number={newNumber} numberOnChange={handleNumberChange}/>
+      <PersonForm onSubmit={addPerson} name={newName} nameOnChange={handleNameChange} number={newNumber} numberOnChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} deletePerson={deletePerson}/>
+      <Persons persons={personsToShow} deletePerson={deletePerson} />
     </div>
   )
 }
@@ -112,7 +117,7 @@ const Fliter = ({ value, onChange }) => {
   )
 }
 
-const PersonForm = ({onSubmit,name,nameOnChange,number,numberOnChange}) => {
+const PersonForm = ({ onSubmit, name, nameOnChange, number, numberOnChange }) => {
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -130,16 +135,16 @@ const PersonForm = ({onSubmit,name,nameOnChange,number,numberOnChange}) => {
   )
 }
 
-const Persons = ({persons,deletePerson}) => {
+const Persons = ({ persons, deletePerson }) => {
   return (
     <ul>
-    {persons.map(person => 
+      {persons.map(person =>
         <li key={person.id}>
           {person.name} {person.number}
-          <button onClick={()=>deletePerson(person.id)}>delete</button>
+          <button onClick={() => deletePerson(person.id)}>delete</button>
         </li>
-    )}
-  </ul>
+      )}
+    </ul>
   )
 }
 
@@ -149,7 +154,7 @@ const Notification = ({ isSuccess, message }) => {
   }
 
   return (
-    <div className={isSuccess?'success':'error'}>
+    <div className={isSuccess ? 'success' : 'error'}>
       {message}
     </div>
   )
