@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
-    console.log('give password as argument')
-    process.exit(1)
+	console.log('give password as argument')
+	process.exit(1)
 }
 
 const password = process.argv[2]
@@ -17,29 +17,29 @@ mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
 const personSchema = new mongoose.Schema({
-    name : String,
-    number : String,
+	name : String,
+	number : String,
 })
 
-const Person = mongoose.model("Person", personSchema)
+const Person = mongoose.model('Person', personSchema)
 
 if (process.argv.length === 5){
-    const person = new Person({
-        name : newName,
-        number : newNumber,
-    })
+	const person = new Person({
+		name : newName,
+		number : newNumber,
+	})
 
-    person.save().then(result => {
-        console.log('note saved!')
-        mongoose.connection.close()
-    })
-    
+	person.save().then(() => {
+		console.log('note saved!')
+		mongoose.connection.close()
+	})
+
 }else{
-    Person.find({}).then(result => {
-        console.log('phonebook:')
-        result.forEach(element => {
-            console.log(element.name,element.number)
-        });
-        mongoose.connection.close()
-    })
+	Person.find({}).then(result => {
+		console.log('phonebook:')
+		result.forEach(element => {
+			console.log(element.name,element.number)
+		})
+		mongoose.connection.close()
+	})
 }
