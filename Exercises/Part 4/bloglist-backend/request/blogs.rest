@@ -8,6 +8,5 @@ Content-Type: application/json
 {
     "title": "111111111",
 	"author": "String",
-	"url": "String",
-	"likes": 1
+	"url": "String"
 }
