@@ -86,6 +86,43 @@ describe('a blog without title or url is not added', () => {
 	})
 })
 
+describe('delete a blog', () => {
+	test('a blog is deleted with existing id', async () => {
+		await api.delete(`/api/blogs/${helper.existingId}`).expect(204)
+
+		const blogsIdDb = await helper.blogsInDb()
+		assert.strictEqual(blogsIdDb.length, helper.initialBlogs.length - 1)
+	})
+
+	test('a blog is not deleted with non-existing id', async () => {
+		await api.delete(`/api/blogs/${helper.nonExistingId}`).expect(400)
+
+		const blogsIdDb = await helper.blogsInDb()
+		assert.strictEqual(blogsIdDb.length, helper.initialBlogs.length)
+	})
+})
+
+
+test('update blog likes to 100', async () => {
+	const updateBlog = helper.initialBlogs[0]
+
+	const blog = {
+		title: updateBlog.title,
+		author: updateBlog.author,
+		url: updateBlog.url,
+		likes: 100
+	}
+
+	const response = await api
+		.put(`/api/blogs/${updateBlog._id}`)
+		.send(blog)
+		.expect(200)
+		.expect('Content-Type', /application\/json/)
+
+	assert.strictEqual(response.body.likes, 100)
+})
+
+
 
 after(async () => {
 	await mongoose.connection.close()

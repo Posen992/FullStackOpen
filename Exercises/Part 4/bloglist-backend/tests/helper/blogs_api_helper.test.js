@@ -76,6 +76,10 @@ const newBlogWithoutUrl = {
 	likes: 0
 }
 
+
+const existingId = '5a422a851b54a676234d17f7'
+const nonExistingId = '1'
+
 const blogsInDb = async () => {
 	const blogs = await Blog.find({})
 	return blogs.map(blog => blog.toJSON())
@@ -88,5 +92,7 @@ module.exports = {
 	newBlogWithoutLikes,
 	newBlogWithoutUrl,
 	newBlogWithoutTitle,
+	existingId,
+	nonExistingId,
 	blogsInDb
 }
