@@ -102,7 +102,6 @@ describe('delete a blog', () => {
 	})
 })
 
-
 test('update blog likes to 100', async () => {
 	const updateBlog = helper.initialBlogs[0]
 
@@ -122,6 +121,16 @@ test('update blog likes to 100', async () => {
 	assert.strictEqual(response.body.likes, 100)
 })
 
+test('a blog without authorization is not added ', async () => {
+	await api
+		.post('/api/blogs')
+		.send(helper.newBlog)
+		.expect(400)
+
+	const blogsInDb = await helper.blogsInDb()
+
+	assert.strictEqual(blogsInDb.length, helper.initialBlogs.length)
+})
 
 
 after(async () => {
