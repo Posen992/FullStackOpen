@@ -1,37 +1,51 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+
+//Components
 import Blog from './components/Blog'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogFrom'
+
+//Services
 import blogService from './services/blogs'
 import loginService from './services/loginService'
 
 const App = () => {
+  //message useState
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState(1) // 0:error 1:success
-
+  //login useState
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
+  //blog useState
   const [blogs, setBlogs] = useState([])
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
+  //useRef
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const loggedBlogappUser = window.localStorage.getItem('loggedBlogappUser')
-    console.log(loggedBlogappUser)
     if (loggedBlogappUser) {
       const user = JSON.parse(loggedBlogappUser)
       setUser(user)
       blogService.setToken(user.token)
       getBlogs()
     }
-  }, [])
+  },[])
 
   const getBlogs = async () => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll().then(newBlogs => {
+      resortBlogs(newBlogs)
+    })
+  }
+
+  const resortBlogs = (prevBlogs) => {
+    const sortedBlogs = [...prevBlogs]
+    sortedBlogs.sort((item1, item2) => item2.likes - item1.likes)
+    setBlogs(sortedBlogs)
   }
 
   const handleLogin = async (event) => {
@@ -53,7 +67,6 @@ const App = () => {
       setPassword('')
       getBlogs()
     } catch (exception) {
-      console.log('response:',exception.response.data)
       showMessage(exception.response.data.error, 0)
     }
   }
@@ -68,24 +81,43 @@ const App = () => {
     setMessage(message)
     setMessageType(messageType)
 
-    console.log('duration',)
     setTimeout(() => {
       setMessage(null)
     }, duration === undefined ? 5000 : duration * 5000)
   }
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-
+  const createBlog = async blogObject => {
     try {
-      const blog = await blogService.createBlog({
-        title, author, url
-      })
+      const blog = await blogService.createBlog(blogObject)
+      blogFormRef.current.toggleVisibility()
 
       setBlogs(blogs.concat(blog))
-      showMessage(`a new blog ${blog.title} by ${blog.author} added`, 1)
+      showMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`, 1)
     } catch (exception) {
-      showMessage(exception.response.date.error, 0)
+      showMessage(exception.response.data.error, 0)
+    }
+  }
+
+  const updateBlog = async (blogId, blogObject) => {
+    try {
+      const blog = await blogService.updateBlog(blogId.toString(), blogObject)
+      const newblogs = blogs.map((item) => {
+        return item.id === blog.id ? blog : item
+      })
+
+      resortBlogs(newblogs)
+    } catch (exception) {
+      showMessage(exception.response.data.error, 0)
+    }
+  }
+
+  const removeBlog = async (blogId) => {
+    try {
+      await blogService.deleteBlog(blogId.toString())
+      const newblogs = blogs.filter((item) => item.id !== blogId)
+      resortBlogs(newblogs)
+    } catch (exception) {
+      showMessage(exception.response.data.error, 0)
     }
   }
 
@@ -95,18 +127,6 @@ const App = () => {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value)
-  }
-
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setUrl(event.target.value)
   }
 
   const loginForm = () => (
@@ -125,19 +145,9 @@ const App = () => {
 
   const createBlogForm = () => (
     <>
-      <form onSubmit={handleCreateBlog}>
-        <h2>create new</h2>
-        <div>
-          title<input value={title} onChange={handleTitleChange} />
-        </div>
-        <div>
-          author<input value={author} onChange={handleAuthorChange} />
-        </div>
-        <div>
-          url<input value={url} onChange={handleUrlChange} />
-        </div>
-        <button type="submit">create</button>
-      </form>
+      <Togglable buttonLabel="new note" ref={blogFormRef}>
+        <BlogForm createBlog={createBlog} />
+      </Togglable>
     </>
   )
 
@@ -149,7 +159,7 @@ const App = () => {
       {createBlogForm()}
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} user={user} updateBlog={updateBlog} removeBlog={removeBlog} />
       )}
     </>
   )
