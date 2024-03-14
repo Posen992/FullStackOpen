@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 //Components
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
-import BlogForm from './components/BlogFrom'
+import BlogForm from './components/BlogForm'
 
 //Services
 import blogService from './services/blogs'

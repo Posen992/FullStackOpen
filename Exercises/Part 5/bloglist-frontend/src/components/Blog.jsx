@@ -5,7 +5,6 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
   const [isShowDetail, setIsShowDetail] = useState(false)
 
   const visible = { display: isShowDetail ? '' : 'none' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
 
   const blogStyle = {
     paddingTop: 10,
@@ -35,9 +34,9 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
   }
 
   const BlogDetail = () => (
-    <div style={visible}>
+    <div style={visible} className='blogDetail'>
       {blog.url}<br />
-      likes {blog.likes}<button onClick={handleLike}>like</button><br />
+      likes {blog.likes}<button className='likeButton' onClick={handleLike}>like</button><br />
       {user.name}<br />
       <button onClick={handleRemove}>remove</button>
     </div>
@@ -45,7 +44,7 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author} <button onClick={() => { setIsShowDetail(!isShowDetail) }}>{isShowDetail ? 'hide' : 'view'}</button>
+      {blog.title} {blog.author} <button className='viewButton' onClick={() => { setIsShowDetail(!isShowDetail) }}>{isShowDetail ? 'hide' : 'view'}</button>
       {BlogDetail()}
     </div>
   )
