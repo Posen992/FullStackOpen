@@ -33,3 +33,9 @@ Content-Type: application/json
 	"url": "String",
 	"likes": 100
 }
+
+
+### 
+POST http://localhost:3003/api/test/reset HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNoZW5zYTk5MiIsImlkIjoiNjVlYjM0OWE4ZjVhMWUyNDVkZDE3N2Q1IiwiaWF0IjoxNzA5OTI2OTAwLCJleHAiOjE3MDk5MzA1MDB9.sXE8ePxyg_sJokyi6QAM5riXmOhasRz4Vic1-L-xomU

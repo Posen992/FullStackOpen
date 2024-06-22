@@ -90,7 +90,7 @@ const App = () => {
     try {
       const blog = await blogService.createBlog(blogObject)
       blogFormRef.current.toggleVisibility()
-
+      console.log(blog)
       setBlogs(blogs.concat(blog))
       showMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`, 1)
     } catch (exception) {
@@ -134,10 +134,10 @@ const App = () => {
       <h1>log in to application</h1>
       <Notification message={message} messageType={messageType} />
       <div>
-        username<input value={username} onChange={handleUsernameChange} />
+        username<input value={username} onChange={handleUsernameChange} data-testid='username' />
       </div>
       <div>
-        password<input value={password} type='password' onChange={handlePasswordChange} />
+        password<input value={password} type='password' onChange={handlePasswordChange} data-testid='password'/>
       </div>
       <button type="submit">login</button>
     </form>
@@ -145,7 +145,7 @@ const App = () => {
 
   const createBlogForm = () => (
     <>
-      <Togglable buttonLabel="new note" ref={blogFormRef}>
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm createBlog={createBlog} />
       </Togglable>
     </>

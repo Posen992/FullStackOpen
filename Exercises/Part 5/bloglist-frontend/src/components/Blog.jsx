@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 const Blog = ({ blog, user, updateBlog, removeBlog }) => {
   const [isShowDetail, setIsShowDetail] = useState(false)
 
-  const visible = { display: isShowDetail ? '' : 'none' }
+  const detailVisible = { display: isShowDetail ? '' : 'none' }
+  const removeVisible = { display: user.username  === blog.user.username ? '' : 'none' }
 
   const blogStyle = {
     paddingTop: 10,
@@ -34,17 +35,17 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
   }
 
   const BlogDetail = () => (
-    <div style={visible} className='blogDetail'>
+    <div style={detailVisible} className='blogDetail'>
       {blog.url}<br />
       likes {blog.likes}<button className='likeButton' onClick={handleLike}>like</button><br />
-      {user.name}<br />
-      <button onClick={handleRemove}>remove</button>
+      {blog.user.name}<br />
+      <button style={removeVisible} onClick={handleRemove}>remove</button>
     </div>
   )
 
   return (
-    <div style={blogStyle}>
-      {blog.title} {blog.author} <button className='viewButton' onClick={() => { setIsShowDetail(!isShowDetail) }}>{isShowDetail ? 'hide' : 'view'}</button>
+    <div style={blogStyle} data-testid='blog'>
+      {blog.title} {blog.author}<button className='viewButton' onClick={() => { setIsShowDetail(!isShowDetail) }}>{isShowDetail ? 'hide' : 'view'}</button>
       {BlogDetail()}
     </div>
   )
