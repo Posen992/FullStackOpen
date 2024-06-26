@@ -3,20 +3,21 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   message: 'There are no notifications',
   isVisible: false,
+  duration: 0,
 }
 
 const notificationSlice = createSlice({
   name: "notification",
   initialState,
   reducers: {
-    setNotificaition: (state, action) => {
+    showNotificaition: (state, action) => {
       return {
         ...state,
         message: action.payload,
         isVisible: true,
       };
     },
-    hideNotificaition: (state, action) => {
+    clearNotification: (state, action) => {
       return {
         ...state,
         message: '',
@@ -26,5 +27,15 @@ const notificationSlice = createSlice({
   }
 })
 
-export const { setNotificaition, hideNotificaition } = notificationSlice.actions
+export const setNotificaition = (message, timeout) => {
+  return async (dispatch) => {
+    dispatch(showNotificaition(message))
+
+    setTimeout(() => {
+      dispatch(clearNotification())
+    }, timeout * 1000);
+  }
+}
+
+export const { showNotificaition, clearNotification } = notificationSlice.actions
 export default notificationSlice.reducer
