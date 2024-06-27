@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   message: 'There are no notifications',
   isVisible: false,
-  duration: 0,
 }
 
 const notificationSlice = createSlice({
