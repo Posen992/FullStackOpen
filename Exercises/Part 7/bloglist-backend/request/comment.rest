@@ -1,0 +1,14 @@
+###
+POST http://localhost:3003/api/comment/6676c1404622972787809c93 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNoZW5zYTk5MiIsImlkIjoiNjVlYjM0OWE4ZjVhMWUyNDVkZDE3N2Q1IiwiaWF0IjoxNzE5NzQ1MTI3LCJleHAiOjE3MTk3NDg3Mjd9.Ctlk041REGdYwre2jGaLB55iESv1aFjk6qqDiO9XNrk
+
+{
+    "content": "111111111",
+	"author": "test"
+}
+
+###
+GET http://localhost:3003/api/comment/6676c1404622972787809c93 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNoZW5zYTk5MiIsImlkIjoiNjVlYjM0OWE4ZjVhMWUyNDVkZDE3N2Q1IiwiaWF0IjoxNzE5NzQ1MTI3LCJleHAiOjE3MTk3NDg3Mjd9.Ctlk041REGdYwre2jGaLB55iESv1aFjk6qqDiO9XNrk
