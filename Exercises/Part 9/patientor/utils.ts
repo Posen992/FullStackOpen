@@ -10,7 +10,8 @@ export const toNewPatient = (object: unknown): NewPatient => {
 		'ssn' in object &&
 		'occupation' in object &&
 		'gender' in object &&
-		'dateOfBirth' in object
+		'dateOfBirth' in object &&
+		'entries' in object
 	) {
 		const newPatient: NewPatient = {
 			name: object.name,
@@ -18,6 +19,7 @@ export const toNewPatient = (object: unknown): NewPatient => {
 			occupation: object.occupation,
 			gender: parseGender(object.gender),
 			dateOfBirth: parseDate(object.dateOfBirth),
+			entries: object.entries,
 		}
 
 		return newPatient

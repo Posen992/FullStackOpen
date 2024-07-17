@@ -9,4 +9,5 @@ diagnoseRouter.get('/', (_req, res) => {
 	res.json(diagnoseService.getDiagnoses())
 })
 
+
 export default diagnoseRouter
